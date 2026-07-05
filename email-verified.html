@@ -30,7 +30,7 @@
     .logo-lwa { color: #ffd700; }
     .logo-tch { color: #ff4444; }
     .logo-ja  { color: #ffffff; }
-    .checkmark { font-size: 64px; margin: 24px 0 16px; }
+    .icon { font-size: 64px; margin: 24px 0 16px; }
     h1 { font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 12px; }
     p { color: #888; font-size: 14px; line-height: 1.6; margin-bottom: 8px; }
     .divider { height: 1px; background: #2a2a2a; margin: 28px 0; }
@@ -47,10 +47,8 @@
       cursor: pointer;
       border: none;
       width: 100%;
-      transition: opacity 0.2s;
     }
-    .open-btn:hover { opacity: 0.85; }
-    .hint { color: #444; font-size: 12px; margin-top: 20px; }
+    .open-btn.error { background: #ff4444; }
     .badge {
       display: inline-block;
       background: #00c85322;
@@ -62,6 +60,10 @@
       padding: 4px 12px;
       margin-bottom: 20px;
     }
+    .badge.loading { background: #ff980022; border-color: #ff9800; color: #ff9800; }
+    .badge.error { background: #ff444422; border-color: #ff4444; color: #ff4444; }
+    .hint { color: #444; font-size: 12px; margin-top: 20px; }
+    #btn { display: none; }
   </style>
 </head>
 <body>
@@ -69,26 +71,85 @@
     <div class="logo-text">
       <span class="logo-fue">Fue</span><span class="logo-lwa">lWa</span><span class="logo-tch">tch</span><span class="logo-ja"> JA</span>
     </div>
-    <div class="badge">✓ Email Verified</div>
-    <div class="checkmark">🎉</div>
-    <h1>You're all set!</h1>
-    <p>Your email has been verified successfully. You can now sign in to FuelWatch JA and start tracking fuel prices across Jamaica.</p>
+
+    <div id="badge" class="badge loading">⏳ Verifying...</div>
+    <div id="icon" class="icon">⏳</div>
+    <h1 id="heading">Verifying your email...</h1>
+    <p id="message">Please wait a moment.</p>
+
     <div class="divider"></div>
-    <button class="open-btn" onclick="openApp()">Open FuelWatch JA</button>
-    <p>If the button above doesn't work, open the FuelWatch JA app on your device and sign in manually.</p>
+
+    <button id="btn" class="open-btn" onclick="openApp()">Open FuelWatch JA</button>
+    <p id="fallback" style="display:none;">If the button doesn't work, open the app and sign in manually.</p>
     <p class="hint">Jamaica's crowdsourced fuel price tracker</p>
   </div>
 
   <script>
     function openApp() {
-      // Just open the app — no auth token needed, Supabase already verified the email
       window.location.href = 'fuelwatchja://';
     }
 
-    // Auto-attempt on load after a short delay
-    window.addEventListener('load', function () {
-      setTimeout(openApp, 1000);
-    });
+    function showSuccess() {
+      document.getElementById('badge').className = 'badge';
+      document.getElementById('badge').textContent = '✓ Email Verified';
+      document.getElementById('icon').textContent = '🎉';
+      document.getElementById('heading').textContent = "You're all set!";
+      document.getElementById('message').textContent = 'Your email has been verified. You can now sign in to FuelWatch JA.';
+      document.getElementById('btn').style.display = 'block';
+      document.getElementById('fallback').style.display = 'block';
+      // Auto-open app after short delay
+      setTimeout(openApp, 1500);
+    }
+
+    function showError(msg) {
+      document.getElementById('badge').className = 'badge error';
+      document.getElementById('badge').textContent = '✕ Verification Failed';
+      document.getElementById('icon').textContent = '❌';
+      document.getElementById('heading').textContent = 'Something went wrong';
+      document.getElementById('message').textContent = msg || 'The verification link may have expired. Please try signing up again.';
+      document.getElementById('btn').className = 'open-btn error';
+      document.getElementById('btn').textContent = 'Open FuelWatch JA';
+      document.getElementById('btn').style.display = 'block';
+    }
+
+    // Parse URL params — Supabase sends token_hash and type
+    const params = new URLSearchParams(window.location.search);
+    const hashParams = new URLSearchParams(window.location.hash.replace('#', ''));
+
+    const tokenHash = params.get('token_hash') || hashParams.get('token_hash');
+    const type = params.get('type') || hashParams.get('type') || 'email';
+    const accessToken = params.get('access_token') || hashParams.get('access_token');
+    const refreshToken = params.get('refresh_token') || hashParams.get('refresh_token');
+
+    if (accessToken) {
+      // Already verified — just show success
+      showSuccess();
+    } else if (tokenHash) {
+      // Need to verify the token hash via Supabase
+      const SUPABASE_URL = 'https://nfvldblmnlogwceulvwy.supabase.co';
+      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mdmxkYmxtbmxvZ3djZXVsdnd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDg5ODIxNTgsImV4cCI6MjAyNDU1ODE1OH0.lwinWOqDcuvXKBKZtyECGnJ2aNmFHSep-MuLH5Ik2EY';
+
+      fetch(`${SUPABASE_URL}/auth/v1/verify`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+        },
+        body: JSON.stringify({ token_hash: tokenHash, type: type }),
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.error) {
+          showError(data.error_description || data.error);
+        } else {
+          showSuccess();
+        }
+      })
+      .catch(() => showError('Network error. Please check your connection and try again.'));
+    } else {
+      // No token — maybe already verified or direct page visit
+      showSuccess();
+    }
   </script>
 </body>
 </html>
