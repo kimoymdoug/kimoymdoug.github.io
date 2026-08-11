@@ -116,11 +116,46 @@
     const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
     const isAndroid = /android/i.test(ua);
 
-    if (isIOS) {
-      window.location.href = 'https://apps.apple.com/jm/app/fuelwatch-ja/id6782056927';
-    } else if (isAndroid) {
-      window.location.href = 'https://play.google.com/store/apps/details?id=com.kimoymdoug.fuelwatchja';
+    const iosStoreUrl = 'https://apps.apple.com/jm/app/fuelwatch-ja/id6782056927';
+    const androidStoreUrl = 'https://play.google.com/store/apps/details?id=com.kimoymdoug.fuelwatchja';
+
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get('ref');
+
+    function copyRefToClipboard() {
+      if (ref && navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText('FWJA_REF:' + ref).catch(function () {});
+      }
     }
+
+    function goToStore() {
+      if (isIOS) {
+        window.location.href = iosStoreUrl;
+      } else if (isAndroid) {
+        window.location.href = androidStoreUrl;
+      }
+      // On desktop or an unrecognized device, do nothing automatically —
+      // the two buttons below stay visible and still work.
+    }
+
+    if (ref) {
+      // Try opening the app directly first — only succeeds if it's already
+      // installed. If we're still here after ~1.2s, assume it isn't, copy
+      // the code to clipboard as a fallback, then continue to the store.
+      window.location.href = 'fuelwatchja://ref/' + encodeURIComponent(ref);
+      setTimeout(function () {
+        copyRefToClipboard();
+        goToStore();
+      }, 1200);
+    } else {
+      goToStore();
+    }
+
+    // Safety net: if someone taps a store button manually — page loaded
+    // without JS having redirected yet, or on a device goToStore() skips —
+    // still copy the code right before they leave for the store.
+    document.getElementById('ios-btn').addEventListener('click', copyRefToClipboard);
+    document.getElementById('android-btn').addEventListener('click', copyRefToClipboard);
   </script>
 </body>
 </html>
