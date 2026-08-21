@@ -1,112 +1,532 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FuelWatch JA – Support</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #0a0a0a; color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; }
-    header { background: #111; border-bottom: 1px solid #222; padding: 20px 24px; display: flex; align-items: center; gap: 12px; }
-    header h1 { font-size: 22px; font-weight: bold; }
-    header h1 span.green { color: #00c853; }
-    header h1 span.gold { color: #ffd700; }
-    header h1 span.red { color: #ff4444; }
-    header h1 span.white { color: #fff; }
-    .tagline { color: #888; font-size: 13px; margin-top: 2px; }
-    .hero { text-align: center; padding: 60px 24px 40px; }
-    .hero h2 { font-size: 28px; font-weight: bold; margin-bottom: 12px; }
-    .hero p { color: #888; font-size: 16px; max-width: 480px; margin: 0 auto; }
-    .section { max-width: 680px; margin: 0 auto; padding: 0 24px 48px; }
-    .section h3 { font-size: 18px; font-weight: bold; color: #00c853; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #222; }
-    .card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 20px; margin-bottom: 12px; }
-    .card h4 { font-size: 15px; font-weight: bold; margin-bottom: 6px; }
-    .card p { color: #888; font-size: 14px; }
-    .contact-box { background: #1a1a1a; border: 1px solid #00c853; border-radius: 12px; padding: 24px; text-align: center; margin-bottom: 24px; }
-    .contact-box p { color: #888; font-size: 14px; margin-bottom: 12px; }
-    .contact-box a { color: #00c853; font-size: 16px; font-weight: bold; text-decoration: none; }
-    .contact-box a:hover { text-decoration: underline; }
-    .links { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 8px; }
-    .links a { color: #888; font-size: 13px; text-decoration: none; padding: 6px 14px; border: 1px solid #2a2a2a; border-radius: 20px; }
-    .links a:hover { color: #fff; border-color: #444; }
-    footer { text-align: center; padding: 32px 24px; border-top: 1px solid #222; color: #444; font-size: 12px; }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FuelWatch JA — Jamaica's Crowdsourced Fuel Price Tracker</title>
+<meta name="description" content="Find the cheapest fuel near you, report prices in seconds, and help keep Jamaica's fuel prices transparent. Free on iOS and Android." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0a0a;
+    --panel: #141414;
+    --panel-2: #1c1c1c;
+    --line: #262626;
+    --green: #00c853;
+    --gold: #ffd700;
+    --red: #ff4444;
+    --blue: #1565c0;
+    --text: #f5f5f5;
+    --muted: #8a8a8a;
+    --muted-2: #5c5c5c;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--ink); color: var(--text); font-family: 'Manrope', sans-serif; overflow-x: hidden; }
+  .display { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.02em; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  a { color: inherit; text-decoration: none; }
+  img { display: block; max-width: 100%; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 28px; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,10,10,0.85); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 16px 28px; max-width: 1180px; margin: 0 auto; }
+  .logo { display: flex; align-items: center; gap: 10px; }
+  .logo-mark { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; }
+  .logo-mark img { width: 100%; height: 100%; object-fit: contain; }
+  .logo-word { font-size: 19px; font-weight: 800; }
+  .logo-word .g { color: var(--green); }
+  .logo-word .y { color: var(--gold); }
+  .logo-word .r { color: var(--red); }
+  .nav-links { display: flex; align-items: center; gap: 32px; }
+  .nav-links a { font-size: 14px; font-weight: 600; color: var(--muted); transition: color 0.2s; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta { background: var(--green); color: #000 !important; padding: 10px 20px; border-radius: 10px; font-weight: 800 !important; font-size: 14px !important; }
+  .nav-mobile-hide { display: flex; }
+  @media (max-width: 720px) { .nav-mobile-hide { display: none; } }
+
+  .hero { padding: 170px 0 0; position: relative; }
+  .hero::before { content: ''; position: absolute; top: -100px; left: 50%; transform: translateX(-50%); width: 900px; height: 500px; background: radial-gradient(ellipse, rgba(0,200,83,0.10) 0%, transparent 70%); pointer-events: none; }
+  .hero-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 40px; align-items: center; }
+  @media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; } }
+
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; color: var(--green); background: rgba(0,200,83,0.08); border: 1px solid rgba(0,200,83,0.3); border-radius: 100px; padding: 7px 14px; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 24px; }
+  .eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(44px, 6.5vw, 84px); line-height: 0.95; letter-spacing: 0.01em; }
+  .hero h1 .accent { color: var(--green); }
+  .hero-sub { font-size: 18px; color: var(--muted); max-width: 480px; margin-top: 22px; line-height: 1.6; }
+  .store-row { display: flex; gap: 14px; margin-top: 34px; flex-wrap: wrap; }
+  .store-btn { display: flex; align-items: center; gap: 10px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 12px; padding: 12px 20px; transition: all 0.2s; }
+  .store-btn:hover { border-color: var(--green); transform: translateY(-2px); }
+  .store-btn .label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  .store-btn .name { font-size: 15px; font-weight: 700; }
+
+  .phone-wrap { display: flex; justify-content: center; position: relative; }
+  .phone-frame { width: 260px; border-radius: 34px; border: 8px solid #1a1a1a; background: #000; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04); position: relative; }
+  .phone-frame::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 90px; height: 22px; background: #1a1a1a; border-radius: 0 0 14px 14px; z-index: 5; }
+  .phone-frame img { width: 100%; display: block; }
+  .phone-float-tag { position: absolute; background: var(--panel); border: 1px solid var(--green); border-radius: 12px; padding: 10px 14px; font-size: 12px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: flex; align-items: center; gap: 6px; }
+  .phone-float-tag.t1 { top: 12%; left: -6%; }
+  .phone-float-tag.t2 { bottom: 16%; right: -8%; }
+  @media (max-width: 900px) { .phone-float-tag { display: none; } }
+
+  .ticker-section { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--panel); overflow: hidden; padding: 16px 0; margin-top: 70px; }
+  .ticker-track { display: flex; gap: 0; width: max-content; animation: scroll-left 45s linear infinite; }
+  .ticker-section:hover .ticker-track { animation-play-state: paused; }
+  @keyframes scroll-left { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .ticker-item { display: flex; align-items: center; gap: 10px; padding: 0 28px; white-space: nowrap; border-right: 1px solid var(--line); }
+  .ticker-station { font-weight: 700; font-size: 14px; }
+  .ticker-parish { color: var(--muted-2); font-size: 12px; }
+  .ticker-fuel { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); background: var(--panel-2); padding: 2px 7px; border-radius: 5px; }
+  .ticker-price { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 15px; }
+  .price-low { color: var(--green); }
+  .price-mid { color: var(--gold); }
+  .price-high { color: var(--red); }
+
+  section { padding: 110px 0; }
+  .section-head { max-width: 640px; margin-bottom: 56px; }
+  .section-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; color: var(--green); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 14px; }
+  .section-head h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(32px, 5vw, 52px); line-height: 1.02; }
+  .section-head p { color: var(--muted); font-size: 16px; margin-top: 14px; line-height: 1.6; }
+
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+
+  .reports-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+  @media (max-width: 900px) { .reports-layout { grid-template-columns: 1fr; } }
+  .reports-carousel { height: 480px; overflow: hidden; position: relative; border-radius: 18px; border: 1px solid var(--line); background: var(--panel); }
+  .reports-carousel::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 80px; background: linear-gradient(transparent, var(--panel)); pointer-events: none; }
+  .reports-track { display: flex; flex-direction: column; animation: scroll-up 28s linear infinite; }
+  .reports-carousel:hover .reports-track { animation-play-state: paused; }
+  @keyframes scroll-up { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+  .report-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 22px; border-bottom: 1px solid var(--line); }
+  .report-info { min-width: 0; }
+  .report-station { font-weight: 700; font-size: 14.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .report-meta { color: var(--muted-2); font-size: 12px; margin-top: 3px; }
+  .report-right { text-align: right; flex-shrink: 0; }
+  .report-price { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 16px; }
+  .report-time { color: var(--muted-2); font-size: 11px; margin-top: 2px; }
+  .reports-loading { padding: 60px 22px; text-align: center; color: var(--muted); font-size: 13px; }
+
+  .reports-copy .stat-row { display: flex; gap: 28px; margin-top: 32px; }
+  .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 44px; color: var(--green); line-height: 1; }
+  .stat-label { font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .live-note { display: flex; align-items: center; gap: 8px; margin-top: 28px; font-size: 13px; color: var(--muted); }
+  .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+
+  .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 900px) { .feature-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .feature-grid { grid-template-columns: 1fr; } }
+  .feature-card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; transition: border-color 0.25s, transform 0.25s; }
+  .feature-card:hover { border-color: var(--green); transform: translateY(-4px); }
+  .feature-shot { width: 100%; height: 190px; object-fit: cover; object-position: top; border-bottom: 1px solid var(--line); }
+  .feature-body { padding: 22px; }
+  .feature-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; font-size: 17px; }
+  .feature-card h3 { font-size: 16px; font-weight: 800; margin-bottom: 7px; }
+  .feature-card p { font-size: 13px; color: var(--muted); line-height: 1.55; }
+
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 800px) { .steps { grid-template-columns: 1fr; } }
+  .step { position: relative; padding: 32px 24px; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; }
+  .step-num { font-family: 'Bebas Neue', sans-serif; font-size: 56px; color: var(--panel-2); -webkit-text-stroke: 1px var(--line); line-height: 1; margin-bottom: 14px; }
+  .step h3 { font-size: 17px; font-weight: 800; margin-bottom: 10px; }
+  .step p { color: var(--muted); font-size: 13.5px; line-height: 1.55; }
+  .step-tag { display: inline-block; margin-top: 14px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--green); background: rgba(0,200,83,0.08); border: 1px solid rgba(0,200,83,0.25); padding: 4px 10px; border-radius: 100px; }
+
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 800px) { .split { grid-template-columns: 1fr; } }
+  .split-card { border-radius: 18px; overflow: hidden; border: 1px solid var(--line); background: var(--panel); }
+  .split-card.gold { border-color: rgba(255,215,0,0.25); }
+  .split-card.green { border-color: rgba(0,200,83,0.25); }
+  .split-shot { width: 100%; height: 220px; object-fit: cover; object-position: top; border-bottom: 1px solid var(--line); }
+  .split-body { padding: 32px; }
+  .split-icon { font-size: 26px; margin-bottom: 14px; }
+  .split-card h3 { font-family: 'Bebas Neue', sans-serif; font-size: 26px; margin-bottom: 10px; }
+  .split-card p { color: var(--muted); font-size: 14px; line-height: 1.6; margin-bottom: 16px; }
+  .rank-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .rank-chip { font-family: 'JetBrains Mono', monospace; font-size: 11px; padding: 5px 10px; border-radius: 100px; border: 1px solid var(--line); color: var(--muted); }
+
+  .social-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 800px) { .social-grid { grid-template-columns: 1fr; } }
+  .social-card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 30px; display: flex; flex-direction: column; align-items: flex-start; gap: 14px; transition: border-color 0.2s, transform 0.2s; }
+  .social-card:hover { border-color: var(--green); transform: translateY(-3px); }
+  .social-badge { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 19px; }
+  .social-card h4 { font-size: 15px; font-weight: 800; }
+  .social-card p { font-size: 12.5px; color: var(--muted); }
+  .social-follow { margin-top: 6px; font-size: 13px; font-weight: 700; color: var(--green); display: flex; align-items: center; gap: 6px; }
+
+  .final-cta { text-align: center; padding: 130px 0; }
+  .final-cta h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(40px, 7vw, 76px); line-height: 0.98; }
+  .final-cta p { color: var(--muted); font-size: 16px; margin-top: 18px; }
+  .final-cta .store-row { justify-content: center; margin-top: 32px; }
+
+  footer { border-top: 1px solid var(--line); padding: 48px 0 32px; }
+  .footer-inner { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 32px; }
+  .footer-links { display: flex; gap: 24px; flex-wrap: wrap; }
+  .footer-links a { font-size: 13px; color: var(--muted); }
+  .footer-links a:hover { color: var(--text); }
+  .footer-bottom { margin-top: 36px; padding-top: 24px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted-2); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  }
+</style>
 </head>
 <body>
 
-<header>
-  <div>
-    <h1>
-      <span class="green">Fuel</span><span class="gold">Wa</span><span class="red">tch</span><span class="white"> JA</span>
-    </h1>
-    <div class="tagline">Jamaica's Fuel Price Tracker</div>
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <img class="logo-mark" src="assets/logo-icon.png" alt="FuelWatch JA logo">
+      <div class="logo-word"><span class="g">Fue</span><span class="y">lWa</span><span class="r">tch</span> JA</div>
+    </a>
+    <div class="nav-links">
+      <div class="nav-mobile-hide" style="display:flex; gap:32px;">
+        <a href="#features">Features</a>
+        <a href="#how">How It Works</a>
+        <a href="#leaderboard">Leaderboard</a>
+      </div>
+      <a href="get-app.html" class="nav-cta">Download</a>
+    </div>
   </div>
-</header>
+</nav>
 
-<div class="hero">
-  <h2>Support Center</h2>
-  <p>Need help with FuelWatch JA? We're here to help. Browse the FAQs below or contact us directly.</p>
-</div>
-
-<div class="section">
-  <h3>📬 Contact Support</h3>
-  <div class="contact-box">
-    <p>Have a question, found a bug, or need account help? Email us directly:</p>
-    <a href="mailto:hello@fuelwatchja.com">hello@fuelwatchja.com</a>
-    <p style="margin-top: 12px; font-size: 13px;">We typically respond within 24–48 hours.</p>
-  </div>
-</div>
-
-<div class="section">
-  <h3>❓ Frequently Asked Questions</h3>
-
-  <div class="card">
-    <h4>How do I report a fuel price?</h4>
-    <p>Tap the Report tab at the bottom of the app. You must be within 75 metres of the station to submit a price report.</p>
-  </div>
-
-  <div class="card">
-    <h4>Why can't I see any stations near me?</h4>
-    <p>Make sure location permissions are enabled for FuelWatch JA in your device settings. You can also tap the 🗺️ Island button to see all stations across Jamaica.</p>
-  </div>
-
-  <div class="card">
-    <h4>How do I delete my account?</h4>
-    <p>Go to Settings → Delete Account. You'll be asked to confirm with a code. Your price reports will remain to keep station history accurate, but your personal data will be removed.</p>
-  </div>
-
-  <div class="card">
-    <h4>Why is my price report still pending?</h4>
-    <p>Reports are confirmed once verified by other nearby users. Pending reports are still visible on the app — they just haven't been confirmed by the community yet.</p>
-  </div>
-
-  <div class="card">
-    <h4>How do I earn points and rank up?</h4>
-    <p>You earn 10 points for each price report submitted and 5 points for each verification. The more accurate reports you submit, the higher your rank — from Newcomer all the way to Super Fueler.</p>
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow reveal in"><span class="dot"></span> Live prices, updated by real drivers</div>
+        <h1 class="reveal in">STOP GUESSING<br>WHAT GAS <span class="accent">COSTS.</span></h1>
+        <p class="hero-sub reveal in">FuelWatch JA is Jamaica's first crowdsourced fuel price tracker. See what stations near you are actually charging, right now — reported by drivers, not estimates.</p>
+        <div class="store-row reveal in">
+          <a href="https://apps.apple.com/jm/app/fuelwatch-ja/id6782056927" class="store-btn">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5C17.88 20.74 17 21.95 15.66 21.97C14.32 22 13.89 21.18 12.37 21.18C10.84 21.18 10.37 21.95 9.1 22C7.78 22.05 6.8 20.68 5.96 19.47C4.25 17 2.94 12.45 4.7 9.39C5.57 7.87 7.13 6.91 8.82 6.88C10.1 6.86 11.32 7.75 12.11 7.75C12.89 7.75 14.37 6.68 15.92 6.84C16.57 6.87 18.39 7.1 19.56 8.82C19.47 8.88 17.39 10.1 17.41 12.63C17.44 15.65 20.06 16.66 20.09 16.67C20.06 16.74 19.67 18.11 18.71 19.5ZM13 3.5C13.73 2.67 14.94 2.04 15.94 2C16.07 3.17 15.6 4.35 14.9 5.19C14.21 6.04 13.07 6.7 11.95 6.61C11.8 5.46 12.36 4.26 13 3.5Z"/></svg>
+            <div><div class="label">Download on the</div><div class="name">App Store</div></div>
+          </a>
+          <a href="https://play.google.com/store/apps/details?id=com.kimoymdoug.fuelwatchja" class="store-btn">
+            <svg width="22" height="22" viewBox="0 0 24 24"><path d="M3.18 23.76C3.06 23.69 3 23.56 3 23.39V0.61C3 0.44 3.06 0.31 3.18 0.24L3.24 0.18L12.77 9.71V9.83L3.24 19.36L3.18 23.76Z" fill="#00C4FF"/><path d="M15.92 13L12.77 9.83V9.71L15.92 6.54L16 6.6L19.74 8.74C20.8 9.34 20.8 10.32 19.74 10.92L16 13.06L15.92 13Z" fill="#FFCD00"/><path d="M16 13.06L12.77 9.83L3.18 19.36C3.54 19.74 4.13 19.79 4.78 19.42L16 13.06Z" fill="#FF3A44"/><path d="M16 6.6L4.78 0.24C4.13-0.13 3.54-0.08 3.18 0.3L12.77 9.83L16 6.6Z" fill="#00CF00"/></svg>
+            <div><div class="label">Get it on</div><div class="name">Google Play</div></div>
+          </a>
+        </div>
+      </div>
+      <div class="phone-wrap reveal in">
+        <div class="phone-frame">
+          <img src="assets/shot-hero.jpg" alt="FuelWatch JA station popup showing self-serve and open 24/7 tags with live prices" loading="eager">
+        </div>
+        <div class="phone-float-tag t1">💰 Full-tank cost, instantly</div>
+        <div class="phone-float-tag t2">🕐 Self-serve · Open 24/7</div>
+      </div>
+    </div>
   </div>
 
-  <div class="card">
-    <h4>How do I report a wrong station or incorrect information?</h4>
-    <p>Open the station's detail page and tap the 🚩 Flag button. Select the issue type and submit — our team reviews all flags.</p>
+  <div class="ticker-section">
+    <div class="ticker-track" id="tickerTrack">
+      <div class="ticker-item"><span class="ticker-station">Loading live prices…</span></div>
+    </div>
   </div>
+</section>
 
-  <div class="card">
-    <h4>The app says I'm offline but I have internet.</h4>
-    <p>This can happen on first launch. Close and reopen the app. If the issue persists, check your connection and try again.</p>
+<section id="reports">
+  <div class="wrap">
+    <div class="reports-layout">
+      <div class="reports-copy reveal">
+        <div class="section-eyebrow">Straight from the source</div>
+        <h2 class="display" style="font-size:clamp(30px,4.5vw,44px); line-height:1.03;">Reported by drivers,<br>minutes ago.</h2>
+        <p style="color:var(--muted); font-size:15px; margin-top:16px; line-height:1.6; max-width:420px;">Every price on FuelWatch JA comes from someone who was actually standing at the pump. Here's a live look at the last few confirmed reports — the full picture is in the app.</p>
+        <div class="stat-row">
+          <div class="stat"><div class="stat-num mono">125m</div><div class="stat-label">Required proximity to report</div></div>
+          <div class="stat"><div class="stat-num mono">14</div><div class="stat-label">Parishes covered</div></div>
+        </div>
+        <div class="live-note"><span class="live-dot"></span> Updating in real time from the FuelWatch JA network</div>
+      </div>
+      <div class="reports-carousel reveal">
+        <div class="reports-track" id="reportsTrack">
+          <div class="reports-loading">Loading recent reports…</div>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
+</section>
 
-<div class="section">
-  <h3>📄 Legal</h3>
-  <div class="links">
-    <a href="/privacy.html">Privacy Policy</a>
-    <a href="/delete-account.html">Delete Account</a>
+<section id="features">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-eyebrow">Everything in your pocket</div>
+      <h2>Built for how you<br>actually drive.</h2>
+      <p>Not just a price list — tools that plan around your tank, your route, and your day.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card reveal">
+        <img class="feature-shot" src="assets/shot-tankcost.jpg" alt="Full tank cost shown next to each fuel price">
+        <div class="feature-body">
+          <div class="feature-icon" style="background:rgba(0,200,83,0.12); color:var(--green);">⛽</div>
+          <h3>Full-Tank Cost</h3>
+          <p>Add your tank size once and see exactly what a fill-up costs at any station's current price — no math required.</p>
+        </div>
+      </div>
+      <div class="feature-card reveal">
+        <img class="feature-shot" src="assets/shot-route.jpg" alt="Cheapest on Your Route screen showing prices along a drive to Ocho Rios">
+        <div class="feature-body">
+          <div class="feature-icon" style="background:rgba(21,101,192,0.15); color:#4d9fff;">🛣️</div>
+          <h3>Cheapest on Your Route</h3>
+          <p>Heading somewhere? Type your destination and see the best-priced stations along the way, not just nearby.</p>
+        </div>
+      </div>
+      <div class="feature-card reveal">
+        <img class="feature-shot" src="assets/shot-selfserve.jpg" alt="Station detail showing Self-Serve and Open 24/7 tags">
+        <div class="feature-body">
+          <div class="feature-icon" style="background:rgba(255,215,0,0.12); color:var(--gold);">🕐</div>
+          <h3>Self-Serve &amp; 24/7 Tags</h3>
+          <p>Know before you go — see which stations pump their own gas or never close, right on the map.</p>
+        </div>
+      </div>
+      <div class="feature-card reveal">
+        <img class="feature-shot" src="assets/shot-ev.jpg" alt="Map showing EV charging station pins in blue">
+        <div class="feature-body">
+          <div class="feature-icon" style="background:rgba(21,101,192,0.15); color:#4d9fff;">⚡</div>
+          <h3>EV Charging Stations</h3>
+          <p>Connector types and time-of-day charging rates, so you always see the price that actually applies right now.</p>
+        </div>
+      </div>
+      <div class="feature-card reveal">
+        <img class="feature-shot" src="assets/shot-compare.jpg" alt="Compare Prices screen ranking stations cheapest to most expensive">
+        <div class="feature-body">
+          <div class="feature-icon" style="background:rgba(0,200,83,0.12); color:var(--green);">📊</div>
+          <h3>Compare in One Tap</h3>
+          <p>Every nearby station, ranked cheapest to priciest, with distance and your real fill-up cost side by side.</p>
+        </div>
+      </div>
+      <div class="feature-card reveal">
+        <img class="feature-shot" src="assets/shot-pricemap.jpg" alt="Live map with prices color-coded green, yellow, and red">
+        <div class="feature-body">
+          <div class="feature-icon" style="background:rgba(255,68,68,0.12); color:var(--red);">📍</div>
+          <h3>Live Price Map</h3>
+          <p>Prices color-coded right on the map — green means cheap, red means look elsewhere, at a glance.</p>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-eyebrow">How reporting works</div>
+      <h2>Takes less time<br>than pumping gas.</h2>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num display">01</div>
+        <h3>Get to the pump</h3>
+        <p>You need to be within 125 metres of a station to report its price — it's how we keep every number honest.</p>
+        <div class="step-tag">Location-verified</div>
+      </div>
+      <div class="step reveal">
+        <div class="step-num display">02</div>
+        <h3>Type it, or snap it</h3>
+        <p>Enter the prices yourself, or just take a photo of the price board — no typing needed at all.</p>
+        <div class="step-tag">Photo or manual</div>
+      </div>
+      <div class="step reveal">
+        <div class="step-num display">03</div>
+        <h3>Earn points, help everyone</h3>
+        <p>Once confirmed, your report goes live for every driver nearby — and you climb the leaderboard.</p>
+        <div class="step-tag">+10 to 15 points</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="leaderboard">
+  <div class="wrap">
+    <div class="split">
+      <div class="split-card gold reveal">
+        <img class="split-shot" src="assets/shot-leaderboard.jpg" alt="Leaderboard showing #1 ranked contributor with animated flame border">
+        <div class="split-body">
+          <div class="split-icon">🏆</div>
+          <h3>Climb the Leaderboard</h3>
+          <p>Every report and verification earns points. Filter to your own parish to see who's really keeping local prices honest — or go for the island-wide top spot.</p>
+          <div class="rank-chips">
+            <span class="rank-chip">Newcomer</span>
+            <span class="rank-chip">Contributor</span>
+            <span class="rank-chip">Road Warrior</span>
+            <span class="rank-chip">Super Fueler</span>
+            <span class="rank-chip" style="color:#9c27b0; border-color:rgba(156,39,176,0.3);">Fuel Legend</span>
+          </div>
+        </div>
+      </div>
+      <div class="split-card green reveal">
+        <img class="split-shot" src="assets/shot-referral.jpg" alt="Settings screen showing personal referral code with Share option">
+        <div class="split-body">
+          <div class="split-icon">🎁</div>
+          <h3>Refer a Friend</h3>
+          <p>Share your personal referral code or QR — when a friend signs up with it, you both earn points instantly. No limit on how many people you bring in.</p>
+          <p style="margin-bottom:0; font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--green); background:rgba(0,200,83,0.06); border:1px solid rgba(0,200,83,0.2); display:inline-block; padding:8px 14px; border-radius:8px;">fuelwatchja.com/get-app.html?ref=YOURCODE</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="social">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-eyebrow">Stay in the loop</div>
+      <h2>Follow FuelWatch JA</h2>
+      <p>Price trend updates, feature drops, and the occasional Jamaican fuel-price rant.</p>
+    </div>
+    <div class="social-grid">
+      <a href="https://instagram.com/fuelwatchja" target="_blank" rel="noopener" class="social-card reveal">
+        <div class="social-badge" style="background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);">📷</div>
+        <h4>Instagram</h4>
+        <p>Behind the scenes, price alerts, and station spotlights.</p>
+        <span class="social-follow">@fuelwatchja →</span>
+      </a>
+      <a href="https://tiktok.com/@fuelwatchja" target="_blank" rel="noopener" class="social-card reveal">
+        <div class="social-badge" style="background:#000; border:1px solid var(--line);">🎵</div>
+        <h4>TikTok</h4>
+        <p>Quick tips on getting the most out of the app.</p>
+        <span class="social-follow">@fuelwatchja →</span>
+      </a>
+      <a href="https://x.com/fuelwatchja" target="_blank" rel="noopener" class="social-card reveal">
+        <div class="social-badge" style="background:#1a1a1a; border:1px solid var(--line);">🐦</div>
+        <h4>X (Twitter)</h4>
+        <p>Real-time price movement news for Jamaica.</p>
+        <span class="social-follow">@fuelwatchja →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="final-cta">
+  <div class="wrap">
+    <div class="reveal">
+      <h2>READY TO STOP<br>OVERPAYING?</h2>
+      <p>Free to download. Free to use. Always.</p>
+      <div class="store-row">
+        <a href="https://apps.apple.com/jm/app/fuelwatch-ja/id6782056927" class="store-btn">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5C17.88 20.74 17 21.95 15.66 21.97C14.32 22 13.89 21.18 12.37 21.18C10.84 21.18 10.37 21.95 9.1 22C7.78 22.05 6.8 20.68 5.96 19.47C4.25 17 2.94 12.45 4.7 9.39C5.57 7.87 7.13 6.91 8.82 6.88C10.1 6.86 11.32 7.75 12.11 7.75C12.89 7.75 14.37 6.68 15.92 6.84C16.57 6.87 18.39 7.1 19.56 8.82C19.47 8.88 17.39 10.1 17.41 12.63C17.44 15.65 20.06 16.66 20.09 16.67C20.06 16.74 19.67 18.11 18.71 19.5ZM13 3.5C13.73 2.67 14.94 2.04 15.94 2C16.07 3.17 15.6 4.35 14.9 5.19C14.21 6.04 13.07 6.7 11.95 6.61C11.8 5.46 12.36 4.26 13 3.5Z"/></svg>
+          <div><div class="label">Download on the</div><div class="name">App Store</div></div>
+        </a>
+        <a href="https://play.google.com/store/apps/details?id=com.kimoymdoug.fuelwatchja" class="store-btn">
+          <svg width="22" height="22" viewBox="0 0 24 24"><path d="M3.18 23.76C3.06 23.69 3 23.56 3 23.39V0.61C3 0.44 3.06 0.31 3.18 0.24L3.24 0.18L12.77 9.71V9.83L3.24 19.36L3.18 23.76Z" fill="#00C4FF"/><path d="M15.92 13L12.77 9.83V9.71L15.92 6.54L16 6.6L19.74 8.74C20.8 9.34 20.8 10.32 19.74 10.92L16 13.06L15.92 13Z" fill="#FFCD00"/><path d="M16 13.06L12.77 9.83L3.18 19.36C3.54 19.74 4.13 19.79 4.78 19.42L16 13.06Z" fill="#FF3A44"/><path d="M16 6.6L4.78 0.24C4.13-0.13 3.54-0.08 3.18 0.3L12.77 9.83L16 6.6Z" fill="#00CF00"/></svg>
+          <div><div class="label">Get it on</div><div class="name">Google Play</div></div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
 
 <footer>
-  &copy; 2026 FuelWatch JA · Jamaica's Fuel Price Tracker · <a href="mailto:hello@fuelwatchja.com" style="color: #444;">hello@fuelwatchja.com</a>
+  <div class="wrap">
+    <div class="footer-inner">
+      <div class="logo">
+        <img class="logo-mark" src="assets/logo-icon.png" alt="FuelWatch JA logo">
+        <div class="logo-word"><span class="g">Fue</span><span class="y">lWa</span><span class="r">tch</span> JA</div>
+      </div>
+      <div class="footer-links">
+        <a href="#features">Features</a>
+        <a href="#how">How It Works</a>
+        <a href="get-app.html">Download</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="delete-account.html">Delete Account</a>
+        <a href="mailto:hello@fuelwatchja.com">Contact</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 FuelWatch JA. Made in Jamaica.</span>
+      <span>hello@fuelwatchja.com</span>
+    </div>
+  </div>
 </footer>
+
+<script>
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => io.observe(el));
+
+  const SUPABASE_URL = 'https://nfvldblmnlogwceulvwy.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mdmxkYmxtbmxvZ3djZXVsdnd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA2NjIyODksImV4cCI6MjA5NjIzODI4OX0.tQP1fMlV-Z7RPhkh-J-us3Pd5013O7eehELnDX6OCj4';
+
+  const fuelLabels = { price_87: '87', price_90: '90', price_diesel: 'Diesel', price_ulsd: 'ULSD', price_88: '88', price_93: '93' };
+
+  function timeAgo(dateStr) {
+    const diffMs = Date.now() - new Date(dateStr).getTime();
+    const min = Math.floor(diffMs / 60000);
+    if (min < 1) return 'Just now';
+    if (min < 60) return min + 'm ago';
+    const hr = Math.floor(min / 60);
+    if (hr < 24) return hr + 'h ago';
+    return Math.floor(hr / 24) + 'd ago';
+  }
+
+  function priceTier(price, allPrices) {
+    if (!allPrices.length) return 'price-mid';
+    const sorted = [...allPrices].sort((a, b) => a - b);
+    const third = sorted.length / 3;
+    const rank = sorted.indexOf(price);
+    if (rank < third) return 'price-low';
+    if (rank < third * 2) return 'price-mid';
+    return 'price-high';
+  }
+
+  async function loadLiveData() {
+    try {
+      const url = `${SUPABASE_URL}/rest/v1/price_reports?select=id,created_at,price_87,price_90,price_diesel,price_ulsd,gas_stations(name,parish)&status=eq.confirmed&pending_transcription=eq.false&order=created_at.desc&limit=10`;
+      const res = await fetch(url, { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } });
+      const data = await res.json();
+      if (!Array.isArray(data) || data.length === 0) return;
+
+      const rows = [];
+      data.forEach(r => {
+        Object.keys(fuelLabels).forEach(key => {
+          if (r[key] != null) {
+            rows.push({ station: r.gas_stations?.name || 'Unknown Station', parish: r.gas_stations?.parish || '', fuel: fuelLabels[key], price: r[key], created_at: r.created_at });
+          }
+        });
+      });
+      const allPrices = rows.map(r => r.price);
+
+      const tickerHtml = rows.map(r => `
+        <div class="ticker-item">
+          <span class="ticker-station">${r.station}</span>
+          <span class="ticker-parish">${r.parish}</span>
+          <span class="ticker-fuel">${r.fuel}</span>
+          <span class="ticker-price mono ${priceTier(r.price, allPrices)}">$${r.price.toFixed(2)}</span>
+        </div>
+      `).join('');
+      document.getElementById('tickerTrack').innerHTML = tickerHtml + tickerHtml;
+
+      const cardsHtml = data.slice(0, 10).map(r => {
+        const firstFuelKey = Object.keys(fuelLabels).find(k => r[k] != null);
+        if (!firstFuelKey) return '';
+        return `
+          <div class="report-row">
+            <div class="report-info">
+              <div class="report-station">${r.gas_stations?.name || 'Unknown Station'}</div>
+              <div class="report-meta">${r.gas_stations?.parish || ''} · ${fuelLabels[firstFuelKey]}</div>
+            </div>
+            <div class="report-right">
+              <div class="report-price mono ${priceTier(r[firstFuelKey], allPrices)}">$${r[firstFuelKey].toFixed(2)}</div>
+              <div class="report-time">${timeAgo(r.created_at)}</div>
+            </div>
+          </div>`;
+      }).join('');
+      document.getElementById('reportsTrack').innerHTML = cardsHtml + cardsHtml;
+    } catch (e) {
+      console.error('Live data failed to load', e);
+    }
+  }
+
+  loadLiveData();
+</script>
 
 </body>
 </html>
