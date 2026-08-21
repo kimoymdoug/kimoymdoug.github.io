@@ -76,17 +76,14 @@
   @media (max-width: 900px) { .phone-float-tag { display: none; } }
 
   .ticker-section { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--panel); overflow: hidden; padding: 16px 0; margin-top: 70px; }
-  .ticker-track { display: flex; gap: 0; width: max-content; animation: scroll-left 45s linear infinite; }
+  .ticker-track { display: flex; gap: 0; width: max-content; animation: scroll-left 160s linear infinite; }
   .ticker-section:hover .ticker-track { animation-play-state: paused; }
   @keyframes scroll-left { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-  .ticker-item { display: flex; align-items: center; gap: 10px; padding: 0 28px; white-space: nowrap; border-right: 1px solid var(--line); }
-  .ticker-station { font-weight: 700; font-size: 14px; }
-  .ticker-parish { color: var(--muted-2); font-size: 12px; }
-  .ticker-fuel { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); background: var(--panel-2); padding: 2px 7px; border-radius: 5px; }
-  .ticker-price { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 15px; }
-  .price-low { color: var(--green); }
-  .price-mid { color: var(--gold); }
-  .price-high { color: var(--red); }
+  .ticker-item { display: flex; align-items: center; gap: 8px; padding: 0 28px; white-space: nowrap; border-right: 1px solid var(--line); }
+  .ticker-station { font-weight: 700; font-size: 14px; margin-right: 2px; }
+  .ticker-parish { color: var(--muted-2); font-size: 12px; margin-right: 4px; }
+  .ticker-fuel { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--muted); }
+  .ticker-price { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 14px; color: var(--green); margin-right: 6px; }
 
   section { padding: 110px 0; }
   .section-head { max-width: 640px; margin-bottom: 56px; }
@@ -104,13 +101,13 @@
   .reports-track { display: flex; flex-direction: column; animation: scroll-up 28s linear infinite; }
   .reports-carousel:hover .reports-track { animation-play-state: paused; }
   @keyframes scroll-up { from { transform: translateY(0); } to { transform: translateY(-50%); } }
-  .report-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 22px; border-bottom: 1px solid var(--line); }
+  .report-row { padding: 16px 22px; border-bottom: 1px solid var(--line); }
   .report-info { min-width: 0; }
   .report-station { font-weight: 700; font-size: 14.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .report-meta { color: var(--muted-2); font-size: 12px; margin-top: 3px; }
-  .report-right { text-align: right; flex-shrink: 0; }
-  .report-price { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 16px; }
-  .report-time { color: var(--muted-2); font-size: 11px; margin-top: 2px; }
+  .report-meta { color: var(--muted-2); font-size: 12px; margin-top: 3px; margin-bottom: 10px; }
+  .report-fuels { display: flex; flex-wrap: wrap; gap: 7px; }
+  .report-fuel-chip { font-size: 12px; color: var(--muted); background: var(--panel-2); border: 1px solid var(--line); border-radius: 7px; padding: 4px 9px; }
+  .report-fuel-chip b { color: var(--green); font-weight: 700; margin-left: 3px; }
   .reports-loading { padding: 60px 22px; text-align: center; color: var(--muted); font-size: 13px; }
 
   .reports-copy .stat-row { display: flex; gap: 28px; margin-top: 32px; }
@@ -124,26 +121,31 @@
   @media (max-width: 600px) { .feature-grid { grid-template-columns: 1fr; } }
   .feature-card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; transition: border-color 0.25s, transform 0.25s; }
   .feature-card:hover { border-color: var(--green); transform: translateY(-4px); }
-  .feature-shot { width: 100%; height: 190px; object-fit: cover; object-position: top; border-bottom: 1px solid var(--line); }
+  .feature-shot { width: 100%; height: 160px; object-fit: cover; object-position: center; border-bottom: 1px solid var(--line); background: #000; }
   .feature-body { padding: 22px; }
   .feature-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; font-size: 17px; }
   .feature-card h3 { font-size: 16px; font-weight: 800; margin-bottom: 7px; }
   .feature-card p { font-size: 13px; color: var(--muted); line-height: 1.55; }
 
-  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-  @media (max-width: 800px) { .steps { grid-template-columns: 1fr; } }
-  .step { position: relative; padding: 32px 24px; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; }
-  .step-num { font-family: 'Bebas Neue', sans-serif; font-size: 56px; color: var(--panel-2); -webkit-text-stroke: 1px var(--line); line-height: 1; margin-bottom: 14px; }
-  .step h3 { font-size: 17px; font-weight: 800; margin-bottom: 10px; }
-  .step p { color: var(--muted); font-size: 13.5px; line-height: 1.55; }
-  .step-tag { display: inline-block; margin-top: 14px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--green); background: rgba(0,200,83,0.08); border: 1px solid rgba(0,200,83,0.25); padding: 4px 10px; border-radius: 100px; }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media (max-width: 620px) { .steps { grid-template-columns: repeat(3, 1fr); gap: 8px; } }
+  .step { position: relative; padding: 22px 16px; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; }
+  @media (max-width: 620px) { .step { padding: 14px 10px; border-radius: 12px; } }
+  .step-num { font-family: 'Bebas Neue', sans-serif; font-size: 42px; color: var(--green); line-height: 1; margin-bottom: 10px; }
+  @media (max-width: 620px) { .step-num { font-size: 28px; margin-bottom: 6px; } }
+  .step h3 { font-size: 16px; font-weight: 800; margin-bottom: 8px; }
+  @media (max-width: 620px) { .step h3 { font-size: 12.5px; margin-bottom: 5px; line-height: 1.25; } }
+  .step p { color: var(--muted); font-size: 13px; line-height: 1.55; }
+  @media (max-width: 620px) { .step p { font-size: 10.5px; line-height: 1.4; } }
+  .step-tag { display: inline-block; margin-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--green); background: rgba(0,200,83,0.08); border: 1px solid rgba(0,200,83,0.25); padding: 4px 9px; border-radius: 100px; }
+  @media (max-width: 620px) { .step-tag { font-size: 8.5px; padding: 3px 6px; margin-top: 8px; } }
 
   .split { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   @media (max-width: 800px) { .split { grid-template-columns: 1fr; } }
   .split-card { border-radius: 18px; overflow: hidden; border: 1px solid var(--line); background: var(--panel); }
   .split-card.gold { border-color: rgba(255,215,0,0.25); }
   .split-card.green { border-color: rgba(0,200,83,0.25); }
-  .split-shot { width: 100%; height: 220px; object-fit: cover; object-position: top; border-bottom: 1px solid var(--line); }
+  .split-shot { width: 100%; height: 190px; object-fit: cover; object-position: center; border-bottom: 1px solid var(--line); background: #000; }
   .split-body { padding: 32px; }
   .split-icon { font-size: 26px; margin-bottom: 14px; }
   .split-card h3 { font-family: 'Bebas Neue', sans-serif; font-size: 26px; margin-bottom: 10px; }
@@ -239,7 +241,7 @@
         <h2 class="display" style="font-size:clamp(30px,4.5vw,44px); line-height:1.03;">Reported by drivers,<br>minutes ago.</h2>
         <p style="color:var(--muted); font-size:15px; margin-top:16px; line-height:1.6; max-width:420px;">Every price on FuelWatch JA comes from someone who was actually standing at the pump. Here's a live look at the last few confirmed reports — the full picture is in the app.</p>
         <div class="stat-row">
-          <div class="stat"><div class="stat-num mono">125m</div><div class="stat-label">Required proximity to report</div></div>
+          <div class="stat"><div class="stat-num mono" style="font-size:32px;">125 meters</div><div class="stat-label">Required proximity to report</div></div>
           <div class="stat"><div class="stat-num mono">14</div><div class="stat-label">Parishes covered</div></div>
         </div>
         <div class="live-note"><span class="live-dot"></span> Updating in real time from the FuelWatch JA network</div>
@@ -328,9 +330,9 @@
       </div>
       <div class="step reveal">
         <div class="step-num display">02</div>
-        <h3>Type it, or snap it</h3>
-        <p>Enter the prices yourself, or just take a photo of the price board — no typing needed at all.</p>
-        <div class="step-tag">Photo or manual</div>
+        <h3>Type it, snap it, or both</h3>
+        <p>Enter the prices yourself, or take a photo of the price board. Do both together and you earn extra points.</p>
+        <div class="step-tag">Both = bonus points</div>
       </div>
       <div class="step reveal">
         <div class="step-num display">03</div>
@@ -382,24 +384,35 @@
     </div>
     <div class="social-grid">
       <a href="https://instagram.com/fuelwatchja" target="_blank" rel="noopener" class="social-card reveal">
-        <div class="social-badge" style="background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);">📷</div>
+        <div class="social-badge" style="background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 2c2.72 0 3.06.01 4.12.06 1.06.05 1.79.22 2.43.47.66.26 1.21.6 1.76 1.15.5.5.9 1.1 1.15 1.76.25.64.42 1.37.47 2.43.05 1.06.06 1.4.06 4.12s-.01 3.06-.06 4.12c-.05 1.06-.22 1.79-.47 2.43a4.9 4.9 0 01-1.15 1.76 4.9 4.9 0 01-1.76 1.15c-.64.25-1.37.42-2.43.47-1.06.05-1.4.06-4.12.06s-3.06-.01-4.12-.06c-1.06-.05-1.79-.22-2.43-.47a4.9 4.9 0 01-1.76-1.15 4.9 4.9 0 01-1.15-1.76c-.25-.64-.42-1.37-.47-2.43C2.01 15.06 2 14.72 2 12s.01-3.06.06-4.12c.05-1.06.22-1.79.47-2.43.26-.66.6-1.21 1.15-1.76A4.9 4.9 0 015.44 2.53c.64-.25 1.37-.42 2.43-.47C8.94 2.01 9.28 2 12 2zm0 5a5 5 0 100 10 5 5 0 000-10zm0 8.2a3.2 3.2 0 110-6.4 3.2 3.2 0 010 6.4zm5.2-8.4a1.2 1.2 0 100-2.4 1.2 1.2 0 000 2.4z"/></svg>
+        </div>
         <h4>Instagram</h4>
         <p>Behind the scenes, price alerts, and station spotlights.</p>
         <span class="social-follow">@fuelwatchja →</span>
       </a>
       <a href="https://tiktok.com/@fuelwatchja" target="_blank" rel="noopener" class="social-card reveal">
-        <div class="social-badge" style="background:#000; border:1px solid var(--line);">🎵</div>
+        <div class="social-badge" style="background:#000; border:1px solid var(--line);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M16.6 5.82s.51.5 0 0A4.278 4.278 0 0115.54 3h-3.09v12.4a2.592 2.592 0 01-2.59 2.5c-1.42 0-2.6-1.16-2.6-2.6 0-1.72 1.66-3.01 3.37-2.48V9.66c-3.45-.46-6.47 2.22-6.47 5.64 0 3.33 2.76 5.7 5.69 5.7 3.14 0 5.69-2.55 5.69-5.7V9.01a7.35 7.35 0 004.3 1.38V7.3s-1.88.09-3.24-1.48z"/></svg>
+        </div>
         <h4>TikTok</h4>
         <p>Quick tips on getting the most out of the app.</p>
         <span class="social-follow">@fuelwatchja →</span>
       </a>
       <a href="https://x.com/fuelwatchja" target="_blank" rel="noopener" class="social-card reveal">
-        <div class="social-badge" style="background:#1a1a1a; border:1px solid var(--line);">🐦</div>
+        <div class="social-badge" style="background:#000; border:1px solid var(--line);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.66l-5.22-6.83-5.97 6.83H1.66l7.73-8.84L1.25 2.25h6.83l4.72 6.24zm-1.16 17.52h1.83L7.02 4.13H5.06z"/></svg>
+        </div>
         <h4>X (Twitter)</h4>
         <p>Real-time price movement news for Jamaica.</p>
         <span class="social-follow">@fuelwatchja →</span>
       </a>
     </div>
+    <div class="reveal" style="margin-top:20px; border-radius:16px; overflow:hidden; border:1px solid var(--line); background:var(--panel);">
+      <a class="twitter-timeline" data-theme="dark" data-height="480" data-chrome="noheader nofooter noborders transparent" href="https://twitter.com/fuelwatchja?ref_src=twsrc%5Etfw">Posts from @fuelwatchja</a>
+      <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    </div>
+    <p style="margin-top:16px; font-size:12px; color:var(--muted-2); max-width:600px;">Live post feeds for Instagram and TikTok need their official developer APIs (app review + access tokens) to embed automatically — the X feed above works out of the box since X's timeline widget doesn't require that setup. Once those accounts are active, ask and we can wire up real embeds there too.</p>
   </div>
 </section>
 
@@ -435,7 +448,7 @@
         <a href="get-app.html">Download</a>
         <a href="privacy.html">Privacy Policy</a>
         <a href="delete-account.html">Delete Account</a>
-        <a href="mailto:hello@fuelwatchja.com">Contact</a>
+        <a href="mailto:hello@fuelwatchja.com" id="contactLink">Contact</a>
       </div>
     </div>
     <div class="footer-bottom">
@@ -467,14 +480,13 @@
     return Math.floor(hr / 24) + 'd ago';
   }
 
-  function priceTier(price, allPrices) {
-    if (!allPrices.length) return 'price-mid';
-    const sorted = [...allPrices].sort((a, b) => a - b);
-    const third = sorted.length / 3;
-    const rank = sorted.indexOf(price);
-    if (rank < third) return 'price-low';
-    if (rank < third * 2) return 'price-mid';
-    return 'price-high';
+  // Every fuel type on a single report is shown together, since a
+  // station's full price picture (87/90/diesel/ULSD together) is what's
+  // actually useful — not one isolated number at a time.
+  function reportFuelList(report) {
+    return Object.keys(fuelLabels)
+      .filter(key => report[key] != null)
+      .map(key => ({ label: fuelLabels[key], price: report[key] }));
   }
 
   async function loadLiveData() {
@@ -484,38 +496,35 @@
       const data = await res.json();
       if (!Array.isArray(data) || data.length === 0) return;
 
-      const rows = [];
-      data.forEach(r => {
-        Object.keys(fuelLabels).forEach(key => {
-          if (r[key] != null) {
-            rows.push({ station: r.gas_stations?.name || 'Unknown Station', parish: r.gas_stations?.parish || '', fuel: fuelLabels[key], price: r[key], created_at: r.created_at });
-          }
-        });
-      });
-      const allPrices = rows.map(r => r.price);
-
-      const tickerHtml = rows.map(r => `
-        <div class="ticker-item">
-          <span class="ticker-station">${r.station}</span>
-          <span class="ticker-parish">${r.parish}</span>
-          <span class="ticker-fuel">${r.fuel}</span>
-          <span class="ticker-price mono ${priceTier(r.price, allPrices)}">$${r.price.toFixed(2)}</span>
-        </div>
-      `).join('');
+      // ---- Ticker: one item per station, all its fuel prices together ----
+      const tickerHtml = data.map(r => {
+        const fuels = reportFuelList(r);
+        if (fuels.length === 0) return '';
+        const priceSpans = fuels.map(f => `<span class="ticker-fuel">${f.label}</span><span class="ticker-price mono">$${f.price.toFixed(2)}</span>`).join('');
+        return `
+          <div class="ticker-item">
+            <span class="ticker-station">${r.gas_stations?.name || 'Unknown Station'}</span>
+            <span class="ticker-parish">${r.gas_stations?.parish || ''}</span>
+            ${priceSpans}
+          </div>`;
+      }).join('');
       document.getElementById('tickerTrack').innerHTML = tickerHtml + tickerHtml;
+      // Scale scroll speed to how much content there actually is, so it
+      // never feels rushed regardless of how many reports come back.
+      const tickerItemCount = data.length;
+      document.getElementById('tickerTrack').style.animationDuration = Math.max(60, tickerItemCount * 18) + 's';
 
-      const cardsHtml = data.slice(0, 10).map(r => {
-        const firstFuelKey = Object.keys(fuelLabels).find(k => r[k] != null);
-        if (!firstFuelKey) return '';
+      // ---- Vertical carousel: full station card, every price listed ----
+      const cardsHtml = data.map(r => {
+        const fuels = reportFuelList(r);
+        if (fuels.length === 0) return '';
+        const priceList = fuels.map(f => `<span class="report-fuel-chip">${f.label} <b class="mono">$${f.price.toFixed(2)}</b></span>`).join('');
         return `
           <div class="report-row">
             <div class="report-info">
               <div class="report-station">${r.gas_stations?.name || 'Unknown Station'}</div>
-              <div class="report-meta">${r.gas_stations?.parish || ''} · ${fuelLabels[firstFuelKey]}</div>
-            </div>
-            <div class="report-right">
-              <div class="report-price mono ${priceTier(r[firstFuelKey], allPrices)}">$${r[firstFuelKey].toFixed(2)}</div>
-              <div class="report-time">${timeAgo(r.created_at)}</div>
+              <div class="report-meta">${r.gas_stations?.parish || ''} · ${timeAgo(r.created_at)}</div>
+              <div class="report-fuels">${priceList}</div>
             </div>
           </div>`;
       }).join('');
@@ -526,6 +535,20 @@
   }
 
   loadLiveData();
+
+  // ---- Contact: copy email to clipboard as a visible fallback to mailto ----
+  const contactLink = document.getElementById('contactLink');
+  if (contactLink) {
+    contactLink.addEventListener('click', (e) => {
+      navigator.clipboard?.writeText('hello@fuelwatchja.com').then(() => {
+        const original = contactLink.textContent;
+        contactLink.textContent = 'Copied! hello@fuelwatchja.com';
+        setTimeout(() => { contactLink.textContent = original; }, 2000);
+      }).catch(() => {});
+      // mailto still proceeds normally as the primary action for anyone
+      // with a mail client configured.
+    });
+  }
 </script>
 
 </body>
