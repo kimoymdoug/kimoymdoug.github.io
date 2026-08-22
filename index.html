@@ -180,6 +180,14 @@
   @media (prefers-reduced-motion: reduce) {
     * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
   }
+
+  /* ---------- LIGHTBOX ---------- */
+  .lb-clickable { cursor: zoom-in; }
+  .lightbox { position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; padding: 40px 20px; }
+  .lightbox.open { display: flex; }
+  .lightbox img { max-width: 100%; max-height: 88vh; border-radius: 12px; box-shadow: 0 30px 80px rgba(0,0,0,0.7); }
+  .lightbox-close { position: absolute; top: 24px; right: 28px; width: 42px; height: 42px; border-radius: 50%; background: var(--panel-2); border: 1px solid var(--line); color: var(--text); font-size: 22px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .lightbox-close:hover { border-color: var(--green); }
 </style>
 </head>
 <body>
@@ -221,7 +229,7 @@
       </div>
       <div class="phone-wrap reveal in">
         <div class="phone-frame">
-          <img src="assets/shot-hero.jpg" alt="FuelWatch JA station popup showing self-serve and open 24/7 tags with live prices" loading="eager">
+          <img class="lb-clickable" src="assets/shot-hero.jpg" data-full="assets/full-hero.jpg" alt="FuelWatch JA station popup showing self-serve and open 24/7 tags with live prices" loading="eager">
         </div>
         <div class="phone-float-tag t1">💰 Full-tank cost, instantly</div>
         <div class="phone-float-tag t2">🕐 Self-serve · Open 24/7</div>
@@ -267,7 +275,7 @@
     </div>
     <div class="feature-grid">
       <div class="feature-card reveal">
-        <img class="feature-shot" src="assets/shot-tankcost.jpg" alt="Full tank cost shown next to each fuel price">
+        <img class="feature-shot lb-clickable" src="assets/shot-tankcost.jpg" data-full="assets/full-tankcost.jpg" alt="Full tank cost shown next to each fuel price">
         <div class="feature-body">
           <div class="feature-icon" style="background:rgba(0,200,83,0.12); color:var(--green);">⛽</div>
           <h3>Full-Tank Cost</h3>
@@ -275,7 +283,7 @@
         </div>
       </div>
       <div class="feature-card reveal">
-        <img class="feature-shot" src="assets/shot-route.jpg" alt="Cheapest on Your Route screen showing prices along a drive to Ocho Rios">
+        <img class="feature-shot lb-clickable" src="assets/shot-route.jpg" data-full="assets/full-route.jpg" alt="Cheapest on Your Route screen showing prices along a drive to Ocho Rios">
         <div class="feature-body">
           <div class="feature-icon" style="background:rgba(21,101,192,0.15); color:#4d9fff;">🛣️</div>
           <h3>Cheapest on Your Route</h3>
@@ -283,7 +291,7 @@
         </div>
       </div>
       <div class="feature-card reveal">
-        <img class="feature-shot" src="assets/shot-selfserve.jpg" alt="Station detail showing Self-Serve and Open 24/7 tags">
+        <img class="feature-shot lb-clickable" src="assets/shot-selfserve.jpg" data-full="assets/full-hero.jpg" alt="Station detail showing Self-Serve and Open 24/7 tags">
         <div class="feature-body">
           <div class="feature-icon" style="background:rgba(255,215,0,0.12); color:var(--gold);">🕐</div>
           <h3>Self-Serve &amp; 24/7 Tags</h3>
@@ -291,7 +299,7 @@
         </div>
       </div>
       <div class="feature-card reveal">
-        <img class="feature-shot" src="assets/shot-ev.jpg" alt="Map showing EV charging station pins in blue">
+        <img class="feature-shot lb-clickable" src="assets/shot-ev.jpg" data-full="assets/full-ev.jpg" alt="Map showing EV charging station pins in blue">
         <div class="feature-body">
           <div class="feature-icon" style="background:rgba(21,101,192,0.15); color:#4d9fff;">⚡</div>
           <h3>EV Charging Stations</h3>
@@ -299,7 +307,7 @@
         </div>
       </div>
       <div class="feature-card reveal">
-        <img class="feature-shot" src="assets/shot-compare.jpg" alt="Compare Prices screen ranking stations cheapest to most expensive">
+        <img class="feature-shot lb-clickable" src="assets/shot-compare.jpg" data-full="assets/full-compare.jpg" alt="Compare Prices screen ranking stations cheapest to most expensive">
         <div class="feature-body">
           <div class="feature-icon" style="background:rgba(0,200,83,0.12); color:var(--green);">📊</div>
           <h3>Compare in One Tap</h3>
@@ -307,7 +315,7 @@
         </div>
       </div>
       <div class="feature-card reveal">
-        <img class="feature-shot" src="assets/shot-pricemap.jpg" alt="Live map with prices color-coded green, yellow, and red">
+        <img class="feature-shot lb-clickable" src="assets/shot-pricemap.jpg" data-full="assets/full-pricemap.jpg" alt="Live map with prices color-coded green, yellow, and red">
         <div class="feature-body">
           <div class="feature-icon" style="background:rgba(255,68,68,0.12); color:var(--red);">📍</div>
           <h3>Live Price Map</h3>
@@ -351,7 +359,7 @@
   <div class="wrap">
     <div class="split">
       <div class="split-card gold reveal">
-        <img class="split-shot" src="assets/shot-leaderboard.jpg" alt="Leaderboard showing #1 ranked contributor with animated flame border">
+        <img class="split-shot lb-clickable" src="assets/shot-leaderboard.jpg" data-full="assets/full-leaderboard.jpg" alt="Leaderboard showing #1 ranked contributor with animated flame border">
         <div class="split-body">
           <div class="split-icon">🏆</div>
           <h3>Climb the Leaderboard</h3>
@@ -366,7 +374,7 @@
         </div>
       </div>
       <div class="split-card green reveal">
-        <img class="split-shot" src="assets/shot-referral.jpg" alt="Settings screen showing personal referral code with Share option">
+        <img class="split-shot lb-clickable" src="assets/shot-referral.jpg" data-full="assets/full-referral.jpg" alt="Settings screen showing personal referral code with Share option">
         <div class="split-body">
           <div class="split-icon">🎁</div>
           <h3>Refer a Friend</h3>
@@ -460,6 +468,11 @@
   </div>
 </footer>
 
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-close" id="lightboxClose">✕</div>
+  <img id="lightboxImg" src="" alt="Full screenshot">
+</div>
+
 <script>
   const revealEls = document.querySelectorAll('.reveal');
   const io = new IntersectionObserver((entries) => {
@@ -537,6 +550,21 @@
   }
 
   loadLiveData();
+
+  // ---- Lightbox: click any screenshot to see the full, uncropped image ----
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  document.querySelectorAll('.lb-clickable').forEach(img => {
+    img.addEventListener('click', () => {
+      const full = img.getAttribute('data-full') || img.src;
+      lightboxImg.src = full;
+      lightbox.classList.add('open');
+    });
+  });
+  function closeLightbox() { lightbox.classList.remove('open'); lightboxImg.src = ''; }
+  document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
 
   // ---- Contact: copy email to clipboard as a visible fallback to mailto ----
   const contactLink = document.getElementById('contactLink');
