@@ -183,7 +183,12 @@
     price_90: { label: '90', color: '#4caf50' },
     price_diesel: { label: 'Diesel', color: '#ffd700' },
     price_ulsd: { label: 'ULSD', color: '#ff9800' },
-    price_kwh: { label: 'EV/kWh', color: '#1565c0' },
+  };
+  const KWH_BAND_META = {
+    price_kwh_0_6: { label: '12am–6am', color: '#1565c0' },
+    price_kwh_6_18: { label: '6am–6pm', color: '#1e88e5' },
+    price_kwh_18_22: { label: '6pm–10pm', color: '#42a5f5' },
+    price_kwh_22_24: { label: '10pm–12am', color: '#64b5f6' },
   };
 
   let stations = [];
@@ -198,23 +203,59 @@
     return res.json();
   }
 
+     const KWH_BAND_ORDER = ['price_kwh_0_6', 'price_kwh_6_18', 'price_kwh_18_22', 'price_kwh_22_24'];
+  function currentKwhBandKey() {
+    const hour = new Date().getHours();
+    if (hour >= 0 && hour < 6) return 'price_kwh_0_6';
+    if (hour >= 6 && hour < 18) return 'price_kwh_6_18';
+    if (hour >= 18 && hour < 22) return 'price_kwh_18_22';
+    return 'price_kwh_22_24';
+  }
+  // Mirrors the app's own getHighlightedKwhPrice — picks the rate for
+  // right now, falling back through the day's bands if that one's blank.
+  function highlightedKwh(row) {
+    const key = currentKwhBandKey();
+    if (row[key] != null) return row[key];
+    for (const k of KWH_BAND_ORDER) { if (row[k] != null) return row[k]; }
+    return null;
+  }
+
+  let evReportsByStation = {};
+
   async function loadData() {
-    const [stationRows, historyRows] = await Promise.all([
+    const [stationRows, historyRows, evReportRows] = await Promise.all([
       fetchJSON(`${SUPABASE_URL}/rest/v1/gas_stations?select=id,name,brand,address,parish,station_type&is_active=eq.true&order=name.asc&limit=2000`),
-      fetchJSON(`${SUPABASE_URL}/rest/v1/price_history?select=station_id,price_87,price_90,price_diesel,price_ulsd,price_kwh,recorded_at&order=recorded_at.desc&limit=5000`),
+      fetchJSON(`${SUPABASE_URL}/rest/v1/price_history?select=station_id,price_87,price_90,price_diesel,price_ulsd,recorded_at&order=recorded_at.desc&limit=5000`),
+      // EV time-of-day pricing only ever lives on price_reports, never in
+      // price_history (which only stores a single price_kwh column that's
+      // rarely populated for EV stations) — pull confirmed reports instead.
+      fetchJSON(`${SUPABASE_URL}/rest/v1/price_reports?select=station_id,price_kwh_0_6,price_kwh_6_18,price_kwh_18_22,price_kwh_22_24,created_at&status=eq.confirmed&pending_transcription=eq.false&order=created_at.desc&limit=3000`),
     ]);
 
     const allStations = Array.isArray(stationRows) ? stationRows : [];
+
     historyByStation = {};
     (Array.isArray(historyRows) ? historyRows : []).forEach((row) => {
       if (!historyByStation[row.station_id]) historyByStation[row.station_id] = [];
       historyByStation[row.station_id].push(row);
     });
 
-    // Only stations with at least one reported price actually show here —
-    // the rest are real, but empty, and don't serve anyone browsing prices.
+    evReportsByStation = {};
+    (Array.isArray(evReportRows) ? evReportRows : []).forEach((row) => {
+      const hasAnyBand = KWH_BAND_ORDER.some((k) => row[k] != null);
+      if (!hasAnyBand) return;
+      if (!evReportsByStation[row.station_id]) evReportsByStation[row.station_id] = [];
+      evReportsByStation[row.station_id].push(row);
+    });
+
+    // Only stations with at least one reported price (fuel history OR EV
+    // report) actually show here — the rest are real, but empty.
     const totalStationCount = allStations.length;
-    stations = allStations.filter((s) => historyByStation[s.id] && historyByStation[s.id].length > 0);
+    stations = allStations.filter((s) => {
+      const hasFuelHistory = historyByStation[s.id] && historyByStation[s.id].length > 0;
+      const hasEvReports = evReportsByStation[s.id] && evReportsByStation[s.id].length > 0;
+      return hasFuelHistory || hasEvReports;
+    });
     const hiddenCount = totalStationCount - stations.length;
 
     populateFilterOptions();
@@ -243,10 +284,16 @@
     parishSelect.innerHTML = '<option value="">All Parishes</option>' + parishes.map((p) => `<option value="${p}">${p}</option>`).join('');
   }
 
-  function currentPricesFor(stationId) {
+    function currentPricesFor(stationId) {
     const rows = historyByStation[stationId];
     if (!rows || rows.length === 0) return null;
     return rows[0];
+  }
+
+  function currentEvRateFor(stationId) {
+    const rows = evReportsByStation[stationId];
+    if (!rows || rows.length === 0) return null;
+    return highlightedKwh(rows[0]); // rows already newest-first
   }
 
   function availableFuelKeysFor(stationId) {
@@ -254,6 +301,15 @@
     const keys = new Set();
     rows.forEach((r) => {
       Object.keys(FUEL_META).forEach((k) => { if (r[k] != null) keys.add(k); });
+    });
+    return Array.from(keys);
+  }
+
+  function availableKwhBandsFor(stationId) {
+    const rows = evReportsByStation[stationId] || [];
+    const keys = new Set();
+    rows.forEach((r) => {
+      KWH_BAND_ORDER.forEach((k) => { if (r[k] != null) keys.add(k); });
     });
     return Array.from(keys);
   }
@@ -286,14 +342,19 @@
 
     listEl.innerHTML = filtered.map((s) => {
       const isEV = s.station_type === 'charging';
-      const current = currentPricesFor(s.id);
       let pricesHtml = '<span class="no-price">No prices reported yet</span>';
-      if (current) {
-        const chips = Object.keys(FUEL_META)
-          .filter((k) => current[k] != null)
-          .map((k) => `<span class="price-chip">${FUEL_META[k].label} <b>$${Number(current[k]).toFixed(2)}</b></span>`)
-          .join('');
-        if (chips) pricesHtml = chips;
+      if (isEV) {
+        const rate = currentEvRateFor(s.id);
+        if (rate != null) pricesHtml = `<span class="price-chip">Now <b>$${Number(rate).toFixed(2)}/kWh</b></span>`;
+      } else {
+        const current = currentPricesFor(s.id);
+        if (current) {
+          const chips = Object.keys(FUEL_META)
+            .filter((k) => current[k] != null)
+            .map((k) => `<span class="price-chip">${FUEL_META[k].label} <b>$${Number(current[k]).toFixed(2)}</b></span>`)
+            .join('');
+          if (chips) pricesHtml = chips;
+        }
       }
       return `
         <div class="station-card" id="card-${s.id}" data-id="${s.id}">
@@ -328,51 +389,57 @@
     if (charts[stationId]) { charts[stationId].destroy(); delete charts[stationId]; }
   }
 
-  function renderDetail(stationId) {
+    function renderDetail(stationId) {
     const detailEl = document.getElementById(`detail-${stationId}`);
-    const fuelKeys = availableFuelKeysFor(stationId);
+    const stationRow = stations.find((s) => s.id === stationId);
+    const isEV = stationRow && stationRow.station_type === 'charging';
+    const keys = isEV ? availableKwhBandsFor(stationId) : availableFuelKeysFor(stationId);
+    const meta = isEV ? KWH_BAND_META : FUEL_META;
 
-    if (fuelKeys.length === 0) {
+    if (keys.length === 0) {
       detailEl.innerHTML = '<div class="chart-empty">No price history yet for this station.</div>';
       return;
     }
 
-    const tabsHtml = fuelKeys.map((k, i) =>
-      `<div class="detail-tab ${i === 0 ? 'active' : ''}" data-fuel="${k}" onclick="switchTab('${stationId}', '${k}')">${FUEL_META[k].label}</div>`
+    const tabsHtml = keys.map((k, i) =>
+      `<div class="detail-tab ${i === 0 ? 'active' : ''}" data-key="${k}" onclick="switchTab('${stationId}', '${k}', ${isEV})">${meta[k].label}</div>`
     ).join('');
 
     detailEl.innerHTML = `
       <div class="detail-tabs">${tabsHtml}</div>
       <div class="chart-wrap"><canvas id="chart-${stationId}"></canvas></div>`;
 
-    drawChart(stationId, fuelKeys[0]);
+    drawChart(stationId, keys[0], isEV);
   }
 
-  function switchTab(stationId, fuelKey) {
+  function switchTab(stationId, key, isEV) {
     const detailEl = document.getElementById(`detail-${stationId}`);
-    detailEl.querySelectorAll('.detail-tab').forEach((t) => t.classList.toggle('active', t.dataset.fuel === fuelKey));
-    drawChart(stationId, fuelKey);
+    detailEl.querySelectorAll('.detail-tab').forEach((t) => t.classList.toggle('active', t.dataset.key === key));
+    drawChart(stationId, key, isEV);
   }
 
-  function drawChart(stationId, fuelKey) {
+  function drawChart(stationId, key, isEV) {
     destroyChart(stationId);
-    const rows = (historyByStation[stationId] || []).filter((r) => r[fuelKey] != null).slice().reverse();
+    const source = isEV ? (evReportsByStation[stationId] || []) : (historyByStation[stationId] || []);
+    const dateField = isEV ? 'created_at' : 'recorded_at';
+    const meta = isEV ? KWH_BAND_META : FUEL_META;
+    const rows = source.filter((r) => r[key] != null).slice().reverse();
     const ctx = document.getElementById(`chart-${stationId}`);
     if (!ctx || rows.length === 0) return;
 
     charts[stationId] = new Chart(ctx, {
       type: 'line',
       data: {
-        labels: rows.map((r) => new Date(r.recorded_at).toLocaleDateString('en-JM', { day: 'numeric', month: 'short' })),
+        labels: rows.map((r) => new Date(r[dateField]).toLocaleDateString('en-JM', { day: 'numeric', month: 'short' })),
         datasets: [{
-          label: FUEL_META[fuelKey].label,
-          data: rows.map((r) => r[fuelKey]),
-          borderColor: FUEL_META[fuelKey].color,
-          backgroundColor: FUEL_META[fuelKey].color + '22',
+          label: meta[key].label,
+          data: rows.map((r) => r[key]),
+          borderColor: meta[key].color,
+          backgroundColor: meta[key].color + '22',
           fill: true,
           tension: 0.25,
           pointRadius: rows.length > 30 ? 0 : 3,
-          pointBackgroundColor: FUEL_META[fuelKey].color,
+          pointBackgroundColor: meta[key].color,
         }],
       },
       options: {
