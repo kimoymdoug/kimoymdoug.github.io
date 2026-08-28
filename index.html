@@ -11,6 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <style>
   :root {
     --ink: #0a0a0a;
@@ -40,16 +41,31 @@
   .logo { display: flex; align-items: center; gap: 10px; }
   .logo-mark { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; }
   .logo-mark img { width: 100%; height: 100%; object-fit: contain; }
-  .logo-word { font-size: 19px; font-weight: 800; }
+  .logo-word { font-size: 19px; font-weight: 800; white-space: nowrap; }
   .logo-word .g { color: var(--green); }
   .logo-word .y { color: var(--gold); }
   .logo-word .r { color: var(--red); }
-  .nav-links { display: flex; align-items: center; gap: 32px; }
-  .nav-links a { font-size: 14px; font-weight: 600; color: var(--muted); transition: color 0.2s; }
-  .nav-links a:hover { color: var(--text); }
-  .nav-cta { background: var(--green); color: #000 !important; padding: 10px 20px; border-radius: 10px; font-weight: 800 !important; font-size: 14px !important; }
-  .nav-mobile-hide { display: flex; }
-  @media (max-width: 720px) { .nav-mobile-hide { display: none; } }
+  .nav-links { display: flex; align-items: center; gap: 20px; }
+  .nav-mobile-hide { display: flex; align-items: center; gap: 32px; }
+  .nav-mobile-hide a { font-size: 14px; font-weight: 600; color: var(--muted); transition: color 0.2s; white-space: nowrap; }
+  .nav-mobile-hide a:hover { color: var(--text); }
+  .nav-cta { background: var(--green); color: #000 !important; padding: 10px 20px; border-radius: 10px; font-weight: 800 !important; font-size: 14px !important; white-space: nowrap; }
+  .nav-hamburger { display: none; background: none; border: none; color: var(--text); cursor: pointer; padding: 6px; align-items: center; justify-content: center; }
+  .nav-mobile-menu { display: none; flex-direction: column; background: var(--panel); border-top: 1px solid var(--line); padding: 6px 28px 14px; }
+  .nav-mobile-menu.open { display: flex; }
+  .nav-mobile-menu a { padding: 12px 0; font-size: 15px; font-weight: 600; color: var(--muted); border-bottom: 1px solid var(--line); }
+  .nav-mobile-menu a:last-child { border-bottom: none; }
+
+  @media (max-width: 720px) {
+    .nav-mobile-hide { display: none; }
+    .nav-hamburger { display: flex; }
+  }
+  @media (max-width: 480px) {
+    .nav-inner { padding: 14px 18px; }
+    .nav-links { gap: 10px; }
+    .logo-word { font-size: 16px; }
+    .nav-cta { padding: 8px 13px; font-size: 12.5px !important; }
+  }
 
   .hero { padding: 170px 0 0; position: relative; }
   .hero::before { content: ''; position: absolute; top: -100px; left: 50%; transform: translateX(-50%); width: 900px; height: 500px; background: radial-gradient(ellipse, rgba(0,200,83,0.10) 0%, transparent 70%); pointer-events: none; }
@@ -74,9 +90,17 @@
   .phone-frame::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 90px; height: 22px; background: #1a1a1a; border-radius: 0 0 14px 14px; z-index: 5; }
   .phone-frame img { width: 100%; display: block; }
   .phone-float-tag { position: absolute; background: var(--panel); border: 1px solid var(--green); border-radius: 12px; padding: 10px 14px; font-size: 12px; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: flex; align-items: center; gap: 6px; }
+  .phone-float-tag .material-icons { font-size: 15px; color: var(--green); }
   .phone-float-tag.t1 { top: 12%; left: -6%; }
   .phone-float-tag.t2 { bottom: 16%; right: -8%; }
-  @media (max-width: 900px) { .phone-float-tag { display: none; } }
+  .phone-tags-mobile { display: none; }
+  @media (max-width: 900px) {
+    .phone-float-tag { display: none; }
+    .phone-wrap { flex-direction: column; gap: 14px; }
+    .phone-tags-mobile { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+    .mobile-tag { display: inline-flex; align-items: center; gap: 5px; background: var(--panel); border: 1px solid var(--green); border-radius: 100px; padding: 7px 12px; font-size: 12px; font-weight: 700; }
+    .mobile-tag .material-icons { font-size: 14px; color: var(--green); }
+  }
 
   .ticker-section { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--panel); overflow: hidden; padding: 16px 0; margin-top: 70px; }
   .ticker-track { display: flex; gap: 0; width: max-content; animation: scroll-left 160s linear infinite; }
@@ -126,7 +150,8 @@
   .feature-card:hover { border-color: var(--green); transform: translateY(-4px); }
   .feature-shot { width: 100%; height: 160px; object-fit: cover; object-position: center; border-bottom: 1px solid var(--line); background: #000; }
   .feature-body { padding: 22px; }
-  .feature-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; font-size: 17px; }
+  .feature-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
+  .feature-icon .material-icons { font-size: 20px; }
   .feature-card h3 { font-size: 16px; font-weight: 800; margin-bottom: 7px; }
   .feature-card p { font-size: 13px; color: var(--muted); line-height: 1.55; }
 
@@ -150,7 +175,7 @@
   .split-card.green { border-color: rgba(0,200,83,0.25); }
   .split-shot { width: 100%; height: 190px; object-fit: cover; object-position: center; border-bottom: 1px solid var(--line); background: #000; }
   .split-body { padding: 32px; }
-  .split-icon { font-size: 26px; margin-bottom: 14px; }
+  .split-icon { margin-bottom: 14px; }
   .split-card h3 { font-family: 'Bebas Neue', sans-serif; font-size: 26px; margin-bottom: 10px; }
   .split-card p { color: var(--muted); font-size: 14px; line-height: 1.6; margin-bottom: 16px; }
   .rank-chips { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -199,14 +224,21 @@
       <div class="logo-word"><span class="g">Fue</span><span class="y">lWa</span><span class="r">tch</span> JA</div>
     </a>
     <div class="nav-links">
-      <div class="nav-mobile-hide" style="display:flex; gap:32px;">
+      <div class="nav-mobile-hide">
         <a href="#features">Features</a>
         <a href="#how">How It Works</a>
         <a href="stations.html">Stations</a>
         <a href="#leaderboard">Leaderboard</a>
       </div>
       <a href="get-app.html" class="nav-cta">Download</a>
+      <button class="nav-hamburger" id="navHamburger" aria-label="Open menu"><span class="material-icons">menu</span></button>
     </div>
+  </div>
+  <div class="nav-mobile-menu" id="navMobileMenu">
+    <a href="#features">Features</a>
+    <a href="#how">How It Works</a>
+    <a href="stations.html">Stations</a>
+    <a href="#leaderboard">Leaderboard</a>
   </div>
 </nav>
 
@@ -232,8 +264,12 @@
         <div class="phone-frame">
           <img class="lb-clickable" src="assets/shot-hero.jpg" data-full="assets/full-hero.jpg" alt="FuelWatch JA station popup showing self-serve and open 24/7 tags with live prices" loading="eager">
         </div>
-        <div class="phone-float-tag t1">💰 Full-tank cost, instantly</div>
-        <div class="phone-float-tag t2">🕐 Self-serve · Open 24/7</div>
+        <div class="phone-float-tag t1"><span class="material-icons">attach_money</span> Full-tank cost, instantly</div>
+        <div class="phone-float-tag t2"><span class="material-icons">schedule</span> Self-serve · Open 24/7</div>
+        <div class="phone-tags-mobile">
+          <span class="mobile-tag"><span class="material-icons">attach_money</span> Full-tank cost</span>
+          <span class="mobile-tag"><span class="material-icons">schedule</span> Self-serve · 24/7</span>
+        </div>
       </div>
     </div>
   </div>
@@ -278,7 +314,7 @@
       <div class="feature-card reveal">
         <img class="feature-shot lb-clickable" src="assets/shot-tankcost.jpg" data-full="assets/full-tankcost.jpg" alt="Full tank cost shown next to each fuel price">
         <div class="feature-body">
-          <div class="feature-icon" style="background:rgba(0,200,83,0.12); color:var(--green);">⛽</div>
+          <div class="feature-icon" style="background:rgba(0,200,83,0.12); color:var(--green);"><span class="material-icons">local_gas_station</span></div>
           <h3>Full-Tank Cost</h3>
           <p>Add your tank size once and see exactly what a fill-up costs at any station's current price — no math required.</p>
         </div>
@@ -286,7 +322,7 @@
       <div class="feature-card reveal">
         <img class="feature-shot lb-clickable" src="assets/shot-route.jpg" data-full="assets/full-route.jpg" alt="Cheapest on Your Route screen showing prices along a drive to Ocho Rios">
         <div class="feature-body">
-          <div class="feature-icon" style="background:rgba(21,101,192,0.15); color:#4d9fff;">🛣️</div>
+          <div class="feature-icon" style="background:rgba(21,101,192,0.15); color:#4d9fff;"><span class="material-icons">alt_route</span></div>
           <h3>Cheapest on Your Route</h3>
           <p>Heading somewhere? Type your destination and see the best-priced stations along the way, not just nearby.</p>
         </div>
@@ -294,7 +330,7 @@
       <div class="feature-card reveal">
         <img class="feature-shot lb-clickable" src="assets/shot-selfserve.jpg" data-full="assets/full-hero.jpg" alt="Station detail showing Self-Serve and Open 24/7 tags">
         <div class="feature-body">
-          <div class="feature-icon" style="background:rgba(255,215,0,0.12); color:var(--gold);">🕐</div>
+          <div class="feature-icon" style="background:rgba(255,215,0,0.12); color:var(--gold);"><span class="material-icons">schedule</span></div>
           <h3>Self-Serve &amp; 24/7 Tags</h3>
           <p>Know before you go — see which stations pump their own gas or never close, right on the map.</p>
         </div>
@@ -302,7 +338,7 @@
       <div class="feature-card reveal">
         <img class="feature-shot lb-clickable" src="assets/shot-ev.jpg" data-full="assets/full-ev.jpg" alt="Map showing EV charging station pins in blue">
         <div class="feature-body">
-          <div class="feature-icon" style="background:rgba(21,101,192,0.15); color:#4d9fff;">⚡</div>
+          <div class="feature-icon" style="background:rgba(21,101,192,0.15); color:#4d9fff;"><span class="material-icons">ev_station</span></div>
           <h3>EV Charging Stations</h3>
           <p>Connector types and time-of-day charging rates, so you always see the price that actually applies right now.</p>
         </div>
@@ -310,7 +346,7 @@
       <div class="feature-card reveal">
         <img class="feature-shot lb-clickable" src="assets/shot-compare.jpg" data-full="assets/full-compare.jpg" alt="Compare Prices screen ranking stations cheapest to most expensive">
         <div class="feature-body">
-          <div class="feature-icon" style="background:rgba(0,200,83,0.12); color:var(--green);">📊</div>
+          <div class="feature-icon" style="background:rgba(0,200,83,0.12); color:var(--green);"><span class="material-icons">bar_chart</span></div>
           <h3>Compare in One Tap</h3>
           <p>Every nearby station, ranked cheapest to priciest, with distance and your real fill-up cost side by side.</p>
         </div>
@@ -318,7 +354,7 @@
       <div class="feature-card reveal">
         <img class="feature-shot lb-clickable" src="assets/shot-pricemap.jpg" data-full="assets/full-pricemap.jpg" alt="Live map with prices color-coded green, yellow, and red">
         <div class="feature-body">
-          <div class="feature-icon" style="background:rgba(255,68,68,0.12); color:var(--red);">📍</div>
+          <div class="feature-icon" style="background:rgba(255,68,68,0.12); color:var(--red);"><span class="material-icons">place</span></div>
           <h3>Live Price Map</h3>
           <p>Prices color-coded right on the map — green means cheap, red means look elsewhere, at a glance.</p>
         </div>
@@ -362,7 +398,7 @@
       <div class="split-card gold reveal">
         <img class="split-shot lb-clickable" src="assets/shot-leaderboard.jpg" data-full="assets/full-leaderboard.jpg" alt="Leaderboard showing #1 ranked contributor with animated flame border">
         <div class="split-body">
-          <div class="split-icon">🏆</div>
+          <div class="split-icon"><span class="material-icons" style="font-size:26px; color:var(--gold);">emoji_events</span></div>
           <h3>Climb the Leaderboard</h3>
           <p>Every report and verification earns points. Filter to your own parish to see who's really keeping local prices honest — or go for the island-wide top spot.</p>
           <div class="rank-chips">
@@ -377,7 +413,7 @@
       <div class="split-card green reveal">
         <img class="split-shot lb-clickable" src="assets/shot-referral.jpg" data-full="assets/full-referral.jpg" alt="Settings screen showing personal referral code with Share option">
         <div class="split-body">
-          <div class="split-icon">🎁</div>
+          <div class="split-icon"><span class="material-icons" style="font-size:26px; color:var(--green);">card_giftcard</span></div>
           <h3>Refer a Friend</h3>
           <p>Share your personal referral code or QR — when a friend signs up with it, you both earn points instantly. No limit on how many people you bring in.</p>
           <p style="margin-bottom:0; font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--green); background:rgba(0,200,83,0.06); border:1px solid rgba(0,200,83,0.2); display:inline-block; padding:8px 14px; border-radius:8px;">fuelwatchja.com/get-app.html?ref=YOURCODE</p>
@@ -496,9 +532,6 @@
     return Math.floor(hr / 24) + 'd ago';
   }
 
-  // Every fuel type on a single report is shown together, since a
-  // station's full price picture (87/90/diesel/ULSD together) is what's
-  // actually useful — not one isolated number at a time.
   function reportFuelList(report) {
     return Object.keys(fuelLabels)
       .filter(key => report[key] != null)
@@ -512,7 +545,6 @@
       const data = await res.json();
       if (!Array.isArray(data) || data.length === 0) return;
 
-      // ---- Ticker: one item per station, all its fuel prices together ----
       const tickerHtml = data.map(r => {
         const fuels = reportFuelList(r);
         if (fuels.length === 0) return '';
@@ -525,12 +557,9 @@
           </div>`;
       }).join('');
       document.getElementById('tickerTrack').innerHTML = tickerHtml + tickerHtml;
-      // Scale scroll speed to how much content there actually is, so it
-      // never feels rushed regardless of how many reports come back.
       const tickerItemCount = data.length;
       document.getElementById('tickerTrack').style.animationDuration = Math.max(60, tickerItemCount * 18) + 's';
 
-      // ---- Vertical carousel: full station card, every price listed ----
       const cardsHtml = data.map(r => {
         const fuels = reportFuelList(r);
         if (fuels.length === 0) return '';
@@ -552,7 +581,6 @@
 
   loadLiveData();
 
-  // ---- Lightbox: click any screenshot to see the full, uncropped image ----
   const lightbox = document.getElementById('lightbox');
   const lightboxImg = document.getElementById('lightboxImg');
   document.querySelectorAll('.lb-clickable').forEach(img => {
@@ -567,7 +595,6 @@
   lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
 
-  // ---- Contact: copy email to clipboard as a visible fallback to mailto ----
   const contactLink = document.getElementById('contactLink');
   if (contactLink) {
     contactLink.addEventListener('click', (e) => {
@@ -576,9 +603,20 @@
         contactLink.textContent = 'Copied! hello@fuelwatchja.com';
         setTimeout(() => { contactLink.textContent = original; }, 2000);
       }).catch(() => {});
-      // mailto still proceeds normally as the primary action for anyone
-      // with a mail client configured.
     });
+  }
+
+  const navHamburger = document.getElementById('navHamburger');
+  const navMobileMenu = document.getElementById('navMobileMenu');
+  if (navHamburger && navMobileMenu) {
+    navHamburger.addEventListener('click', () => {
+      const isOpen = navMobileMenu.classList.toggle('open');
+      navHamburger.querySelector('.material-icons').textContent = isOpen ? 'close' : 'menu';
+    });
+    navMobileMenu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => {
+      navMobileMenu.classList.remove('open');
+      navHamburger.querySelector('.material-icons').textContent = 'menu';
+    }));
   }
 </script>
 
